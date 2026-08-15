@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="What Instant builds, how its inference network works, and what its verification signals do and do not prove.">
+    <meta name="robots" content="index, follow">
+    <meta id="theme-color" name="theme-color" content="#d9e0e9">
+    <title>About Instant · Instant Docs</title>
+    <link rel="canonical" href="https://instantsubnet.com/docs/about/">
+    <link rel="icon" type="image/svg+xml" href="/docs/assets/favicon.svg">
+    <link rel="stylesheet" href="/docs/assets/docs.css">
+    <script src="/docs/assets/docs.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="/docs/about/#main-content">Skip to content</a>
+    <header class="docs-header">
+      <div class="docs-header-inner">
+        <a class="docs-brand" href="/docs/" aria-label="Instant documentation home">
+          <span class="docs-brand-mark" aria-hidden="true">IN</span>
+          <span>Instant Docs</span>
+        </a>
+        <nav class="docs-nav" id="docs-nav" aria-label="Primary navigation">
+          <ul>
+            <li><a href="/docs/">Overview</a></li>
+            <li><a href="/docs/miners/">Miners</a></li>
+            <li><a href="/docs/validators/">Validators</a></li>
+            <li><a href="/docs/troubleshooting/">Troubleshooting</a></li>
+            <li><a href="/docs/about/" aria-current="page">About</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">
+          <svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.4A8.5 8.5 0 0 1 8.6 4 8.5 8.5 0 1 0 20 15.4Z"/></svg>
+          <svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <button class="docs-menu-toggle" id="docs-menu-toggle" type="button" aria-controls="docs-nav" aria-expanded="false" aria-label="Open documentation menu">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="docs-main" id="main-content">
+      <aside class="docs-sidebar" aria-label="On this page">
+        <h2>About Instant</h2>
+        <nav aria-label="Page sections">
+          <ul>
+            <li><a href="/docs/about/#purpose">Purpose</a></li>
+            <li><a href="/docs/about/#architecture">Architecture</a></li>
+            <li><a href="/docs/about/#principles">Principles</a></li>
+            <li><a href="/docs/about/#claims">Claim boundaries</a></li>
+            <li><a href="/docs/about/#links">Official links</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <article class="docs-content">
+        <header class="page-header" id="purpose">
+          <p class="eyebrow">About Instant</p>
+          <h1>Fast inference with evidence attached.</h1>
+          <p class="lede">
+            Instant is building an OpenAI-compatible inference network for
+            Bittensor. Independent miners contribute GPU capacity through outbound
+            connections, while validators inspect signed delivery evidence and
+            score completed platform metrics and set weights on Finney subnet 46.
+          </p>
+        </header>
+
+        <section id="architecture" aria-labelledby="architecture-title">
+          <h2 id="architecture-title">Architecture</h2>
+          <div class="card-grid">
+            <article class="card">
+              <p class="eyebrow">Edge</p>
+              <h3>Platform gateway</h3>
+              <p>Authenticates customer requests, selects qualified capacity, observes timing, verifies receipts, and publishes bounded evidence.</p>
+            </article>
+            <article class="card">
+              <p class="eyebrow">Compute</p>
+              <h3>Outbound miners</h3>
+              <p>Run the approved model behind a local backend, connect over secure WebSocket, stream results, and sign terminal receipts.</p>
+            </article>
+            <article class="card">
+              <p class="eyebrow">Consensus</p>
+              <h3>Validators</h3>
+              <p>Fetch a signed completed-period platform report, calculate one deterministic score vector, and call direct <code>set_weights</code>.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="principles" aria-labelledby="principles-title">
+          <h2 id="principles-title">Operating principles</h2>
+          <dl class="principle-list">
+            <div>
+              <dt>Fail closed</dt>
+              <dd>Invalid onboarding identity stops admission. Failed or expired TOPLOC assertions cause platform policy to hold the miner from future routing.</dd>
+            </div>
+            <div>
+              <dt>Least authority</dt>
+              <dd>GPU hosts use operational hotkeys to authenticate their outbound worker sessions. They do not need owner coldkeys or validator wallets.</dd>
+            </div>
+            <div>
+              <dt>Evidence before reward</dt>
+              <dd>Reward inputs come from the platform's signed completed-period metrics and terminal TOPLOC outcomes.</dd>
+            </div>
+            <div>
+              <dt>Honest boundaries</dt>
+              <dd>The verifier asserts only pass or fail. The platform alone owns miner routing and temporary-hold policy.</dd>
+            </div>
+          </dl>
+        </section>
+
+        <section id="claims" aria-labelledby="claims-title">
+          <h2 id="claims-title">What the current signals mean</h2>
+          <div class="table-wrap">
+            <table>
+              <caption>Verification claims and limits</caption>
+              <thead>
+                <tr><th scope="col">Signal</th><th scope="col">Supports</th><th scope="col">Does not establish</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row">Hotkey signature</th><td>Control of a registered operational identity.</td><td>Ownership of a specific GPU or model process.</td></tr>
+                <tr><th scope="row">Signed receipt</th><td>A miner commitment to exact request and response digests and reported token counts.</td><td>That the approved model generated the response.</td></tr>
+                <tr><th scope="row">TOPLOC profile</th><td>For supported deterministic requests, binding between tokens, hidden-state evidence, model profile, nonce, and receipt.</td><td>Prompt confidentiality, TEE isolation, or arbitrary stochastic decoding.</td></tr>
+                <tr><th scope="row">Validator score</th><td>A deterministic result from the signed platform metrics report.</td><td>An independent re-audit of the platform's miner roster.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section aria-labelledby="availability-title">
+          <h2 id="availability-title">Availability</h2>
+          <p>
+            Miner participation is currently curated. The public one-line installer
+            will remain unavailable until the production release is signed and its
+            trust anchors are published here. Validator operations should remain
+            use the Phase 0 repositories only for review; the Finney miner, verifier,
+            platform, and validator workflows are being rebuilt and tested in gated phases.
+          </p>
+          <div class="actions">
+            <a class="button button--primary" href="/docs/miners/">Read the miner guide</a>
+            <a class="button" href="/docs/validators/">Read the validator guide</a>
+          </div>
+        </section>
+
+        <section id="links" aria-labelledby="links-title">
+          <h2 id="links-title">Official links</h2>
+          <ul class="link-list">
+            <li><a href="https://instantsubnet.com" rel="noopener noreferrer">Instant website</a></li>
+            <li><a href="https://github.com/instant-subnet" rel="noopener noreferrer">Instant on GitHub</a></li>
+            <li><a href="https://x.com/instantsubnet" rel="noopener noreferrer">Instant on X</a></li>
+          </ul>
+          <p>Security-sensitive commands and release fingerprints are authoritative only when published in these official documentation pages.</p>
+        </section>
+      </article>
+    </main>
+
+    <footer class="docs-footer">
+      <div class="docs-footer-inner">
+        <p>© <span data-current-year></span> Instant · About the network</p>
+        <nav aria-label="Footer navigation">
+          <a href="/docs/miners/">Miner guide</a>
+          <a href="/docs/validators/">Validator guide</a>
+          <a href="/docs/troubleshooting/">Get help</a>
+        </nav>
+      </div>
+    </footer>
+  </body>
+</html>
