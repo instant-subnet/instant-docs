@@ -45,9 +45,9 @@
         <nav aria-label="Page sections">
           <ul>
             <li><a href="/docs/validators/#prerequisites">Prerequisites</a></li>
-            <li><a href="/docs/validators/#read-only">Service setup</a></li>
+            <li><a href="/docs/validators/#service">Service setup</a></li>
             <li><a href="/docs/validators/#networks">Network configuration</a></li>
-            <li><a href="/docs/validators/#evidence">Weight loop</a></li>
+            <li><a href="/docs/validators/#evidence">Weight modes</a></li>
             <li><a href="/docs/validators/#limits">Limitations</a></li>
           </ul>
         </nav>
@@ -56,20 +56,18 @@
       <article class="docs-content">
         <header class="page-header">
           <p class="eyebrow">Validator guide</p>
-          <h1>Fetch metrics. Score miners. Set weights. Repeat.</h1>
+          <h1>Run a small, supervised weight service.</h1>
           <p class="lede">
-            An Instant validator is a small PM2-managed service. It waits for the
-            configured weight time, fetches one signed platform report, computes a
-            deterministic UID weight vector, calls <code>set_weights</code>, and waits again.
+            An Instant validator runs one PM2-managed loop on Finney subnet 46. Its
+            default weight plan is a 100% burn vote to the current subnet-owner UID.
           </p>
         </header>
 
         <aside class="callout callout--warning" aria-labelledby="validator-status-title">
-          <h2 id="validator-status-title">The launch validator is still being implemented</h2>
+          <h2 id="validator-status-title">Burn is the default</h2>
           <p>
-            Phase 0 resets the repository boundary. Do not run the validator against
-            Finney until the Phase 4 dry-run displays the exact prospective weights
-            and the first live <code>set_weights</code> call is approved.
+            The checked-in configuration enables burn and disables chain writes. Report
+            scoring and weight submission require explicit private configuration.
           </p>
         </aside>
 
@@ -79,7 +77,7 @@
             <li>A Linux host with reliable time, storage, and outbound HTTPS/Finney access.</li>
             <li>An operational validator hotkey registered on Finney subnet 46 with the required permit and stake.</li>
             <li>The reviewed Instant validator release and its pinned dependencies.</li>
-            <li>The expected platform report URL and signer identity.</li>
+            <li>For report scoring, the expected platform report URL and signer identity.</li>
             <li>A private <code>.env</code> containing wallet and service configuration.</li>
           </ul>
           <aside class="callout callout--info">
@@ -88,9 +86,9 @@
           </aside>
         </section>
 
-        <section id="read-only" aria-labelledby="read-only-title">
+        <section id="service" aria-labelledby="service-title">
           <p class="eyebrow">One supervised process</p>
-          <h2 id="read-only-title">Configure once and let PM2 run the loop</h2>
+          <h2 id="service-title">Configure once and let PM2 run the loop</h2>
           <ol class="steps">
             <li>
               <h3>Create private configuration</h3>
@@ -108,13 +106,14 @@
               <p>Confirm the service is online and not restarting before inspecting its bounded log tail.</p>
             </li>
             <li>
-              <h3>Approve the first write</h3>
-              <p>During commissioning, review the dry-run UID/weight vector before enabling the first live call.</p>
+              <h3>Verify the dry run</h3>
+              <p>Review the resolved owner UID and 100% burn vector before enabling chain writes.</p>
             </li>
           </ol>
           <p>
-            The launch service uses direct <code>set_weights</code>. Commit/reveal,
-            interactive one-shot commands, and alternate writer modes are outside MVP.
+            Burn and report-scoring modes are mutually exclusive. Both fail closed on
+            invalid chain or report state. This service does not implement commit/reveal
+            or interactive one-shot commands.
           </p>
         </section>
 
@@ -124,43 +123,44 @@
             <table>
               <caption>Configuration ownership</caption>
               <thead>
-                <tr><th scope="col">Setting</th><th scope="col">Launch default</th><th scope="col">Override</th></tr>
+                <tr><th scope="col">Setting</th><th scope="col">Default</th><th scope="col">Override</th></tr>
               </thead>
               <tbody>
                 <tr><th scope="row">Network</th><td>Finney</td><td>Private <code>.env</code> or explicit operator flag for testing.</td></tr>
                 <tr><th scope="row">Subnet</th><td>46</td><td>Private testing only.</td></tr>
-                <tr><th scope="row">Metrics</th><td>Signed completed platform report</td><td>Configured platform URL and signer.</td></tr>
-                <tr><th scope="row">Writer</th><td>Direct <code>set_weights</code></td><td>No alternate launch mode.</td></tr>
+                <tr><th scope="row">Metrics</th><td>None in burn mode</td><td>Signed completed report in report-scoring mode.</td></tr>
+                <tr><th scope="row">Weight mode</th><td>100% burn vote</td><td>Report scoring through private configuration.</td></tr>
               </tbody>
             </table>
           </div>
         </section>
 
         <section id="evidence" aria-labelledby="evidence-title">
-          <p class="eyebrow">The complete weight loop</p>
-          <h2 id="evidence-title">The platform supplies the miner rows</h2>
+          <p class="eyebrow">Weight submission</p>
+          <h2 id="evidence-title">Burn mode is chain-only</h2>
           <ol class="flow-list">
-            <li>Wait until the configured weight time.</li>
-            <li>Fetch the latest completed report from the platform.</li>
-            <li>Verify its signature, schema, network, netuid, freshness, and report ID.</li>
-            <li>Score the supplied UID rows with one deterministic formula and normalize weights.</li>
-            <li>Call direct <code>set_weights</code>, record the applied report ID, and wait again.</li>
+            <li>Read one finalized chain snapshot.</li>
+            <li>Require protocol Burn mode with commit/reveal disabled.</li>
+            <li>Resolve the subnet-owner hotkey, UID, and weight version from that snapshot.</li>
+            <li>Submit the owner UID with weight 65,535 when chain writes are enabled.</li>
+            <li>Wait for the next configured cycle.</li>
           </ol>
           <p>
-            The platform verifies miner registration and publishes both UID and hotkey.
-            Validators trust that roster in MVP; optional independent reconciliation can
-            be added later as a preflight.
+            Report-scoring mode instead verifies one signed, completed-period platform
+            report and applies the documented deterministic formula. The platform owns
+            miner registration checks and supplies each miner's UID and hotkey.
           </p>
         </section>
 
         <section id="limits" aria-labelledby="validator-limits-title">
           <h2 id="validator-limits-title">Current limitations</h2>
           <ul class="check-list check-list--limits">
-            <li>The validator trusts the platform's signed miner roster and metrics in MVP.</li>
+            <li>Report-scoring mode trusts the platform's signed miner roster and metrics.</li>
             <li>It does not query or probe miners directly.</li>
-            <li>Invalid, stale, duplicate, wrongly signed, wrong-network, or empty reports never write weights.</li>
+            <li>Invalid, stale, duplicate, wrongly signed, wrong-network, or empty reports never reach the scoring writer.</li>
             <li>There is one scoring formula and one direct writer path.</li>
-            <li>The first live Finney write remains a separate operator approval.</li>
+            <li>Burn and report scoring cannot run in the same process.</li>
+            <li>Commit/reveal is not supported.</li>
           </ul>
           <p><a class="text-link" href="/docs/troubleshooting/#validator">Troubleshoot a validator safely</a></p>
         </section>

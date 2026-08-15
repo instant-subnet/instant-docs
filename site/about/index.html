@@ -58,10 +58,10 @@
           <p class="eyebrow">About Instant</p>
           <h1>Fast inference with evidence attached.</h1>
           <p class="lede">
-            Instant is building an OpenAI-compatible inference network for
+            Instant is an OpenAI-compatible inference network for
             Bittensor. Independent miners contribute GPU capacity through outbound
             connections, while validators inspect signed delivery evidence and
-            score completed platform metrics and set weights on Finney subnet 46.
+            derive weights from completed platform metrics on Finney subnet 46.
           </p>
         </header>
 
@@ -81,7 +81,7 @@
             <article class="card">
               <p class="eyebrow">Consensus</p>
               <h3>Validators</h3>
-              <p>Fetch a signed completed-period platform report, calculate one deterministic score vector, and call direct <code>set_weights</code>.</p>
+              <p>Submit a 100% burn vote by default. Report-scoring mode validates signed platform metrics and derives one deterministic weight vector.</p>
             </article>
           </div>
         </section>
@@ -91,7 +91,7 @@
           <dl class="principle-list">
             <div>
               <dt>Fail closed</dt>
-              <dd>Invalid onboarding identity stops admission. Failed or expired TOPLOC assertions cause platform policy to hold the miner from future routing.</dd>
+              <dd>Invalid onboarding identity stops admission. Failed or expired TOPLOC assertions cause platform policy to hold the miner from subsequent routing.</dd>
             </div>
             <div>
               <dt>Least authority</dt>
@@ -129,11 +129,9 @@
         <section aria-labelledby="availability-title">
           <h2 id="availability-title">Availability</h2>
           <p>
-            Miner participation is currently curated. The public one-line installer
-            will remain unavailable until the production release is signed and its
-            trust anchors are published here. Validator operations should remain
-            use the Phase 0 repositories only for review; the Finney miner, verifier,
-            platform, and validator workflows are being rebuilt and tested in gated phases.
+            Miner participation is not open to the public, and no public installer
+            is available. Use only signed releases and commands published through
+            Instant's official channels.
           </p>
           <div class="actions">
             <a class="button button--primary" href="/docs/miners/">Read the miner guide</a>

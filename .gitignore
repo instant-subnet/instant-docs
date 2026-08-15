@@ -1,4 +1,4 @@
-# Local operational evidence and legacy handoffs can contain infrastructure
+# Local operational evidence and retired internal documents can contain infrastructure
 # identifiers. Preserve them beside the docs checkout, but never publish them.
 /private/
 
