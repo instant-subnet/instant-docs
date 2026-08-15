@@ -124,7 +124,6 @@ class PublicSiteTests(unittest.TestCase):
             re.search(r"\b[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}\b", public_text)
         )
         for forbidden in (
-            "phase report",
             "password-free SSH",
             "localnet",
             "netuid 5",

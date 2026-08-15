@@ -94,7 +94,7 @@
             </li>
             <li>
               <h3>Verify and score</h3>
-              <p>The H200 verifier asynchronously returns a pass/fail assertion. The platform applies hold policy, and validators score completed platform metrics.</p>
+              <p>The verifier asynchronously returns a pass/fail assertion. The platform applies hold policy, and validators consume completed platform metrics.</p>
             </li>
           </ol>
         </section>
@@ -122,10 +122,10 @@
           <p class="eyebrow">Current boundaries</p>
           <h2 id="boundaries-title">Conservative by design</h2>
           <ul class="check-list">
-            <li>The public Miner Kit remains unavailable until its one-line release is complete and tested.</li>
+            <li>The public Miner Kit is unavailable; no public installation command is supported.</li>
             <li>Workers initiate outbound TLS WebSocket connections; miners do not need to expose an inference port.</li>
-            <li>Customer output streams immediately; TOPLOC verification happens asynchronously and affects future routing.</li>
-            <li>The launch validator is a small Finney/SN46 service that fetches completed platform metrics and calls direct <code>set_weights</code>.</li>
+            <li>Customer output streams immediately; TOPLOC verification happens asynchronously and affects subsequent routing.</li>
+            <li>The validator defaults to a 100% burn vote. Report-based scoring is a separate, explicitly configured mode.</li>
           </ul>
           <p><a class="text-link" href="/docs/about/">Read the product principles and claim boundaries</a></p>
         </section>

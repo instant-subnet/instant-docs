@@ -100,9 +100,11 @@
           </article>
 
           <article class="troubleshooting-item">
-            <h3>3. Validate worker configuration</h3>
-            <pre class="command"><code>instant-worker --check</code></pre>
-            <p>This checks configuration and safety guards. It should not print secret values.</p>
+            <h3>3. Run the signed Miner Kit preflight</h3>
+            <pre class="command"><code>sudo runuser --user instant-miner -- \
+  /opt/instant-miner/current/bin/instant-miner-kit preflight \
+  --config /etc/instant-miner/worker.env</code></pre>
+            <p>This checks configuration, wallet ownership, GPU, model, backend, and platform reachability without printing secret values.</p>
           </article>
 
           <article class="troubleshooting-item">
@@ -128,7 +130,7 @@
                 <tr><th scope="col">Symptom</th><th scope="col">Likely boundary</th><th scope="col">Safe next check</th></tr>
               </thead>
               <tbody>
-                <tr><th scope="row">Cannot connect</th><td>DNS, TLS, clock, gateway URL, or platform identity mismatch.</td><td>Confirm system time and outbound HTTPS access; then run <code>instant-worker --check</code>.</td></tr>
+                <tr><th scope="row">Cannot connect</th><td>DNS, TLS, clock, gateway URL, or platform identity mismatch.</td><td>Confirm system time and outbound HTTPS access; then run the signed Miner Kit preflight above.</td></tr>
                 <tr><th scope="row">Connected, not ready</th><td>Backend health, model digest, capacity, or heartbeat qualification.</td><td>Check local backend health and the bounded worker log tail.</td></tr>
                 <tr><th scope="row">Ready, no ordinary traffic</th><td>The worker may be canary-only or on a temporary platform hold after verification.</td><td>Open the public miner profile and review its latest TOPLOC status with the platform operator.</td></tr>
                 <tr><th scope="row">Identity rejected</th><td>The submitted Finney/SN46 UID and hotkey do not map to one another, or the signature failed.</td><td>Confirm both public values and that the selected local wallet controls the submitted hotkey.</td></tr>
@@ -140,7 +142,7 @@
 
         <section id="validator" aria-labelledby="validator-title">
           <p class="eyebrow">Validator</p>
-          <h2 id="validator-title">Check the one supervised weight loop</h2>
+          <h2 id="validator-title">Check the configured weight mode</h2>
 
           <article class="troubleshooting-item">
             <h3>Service is offline or restarting</h3>
@@ -151,17 +153,22 @@
           <article class="troubleshooting-item">
             <h3>Read a bounded log tail</h3>
             <pre class="command"><code>pm2 logs instant-validator --lines 100 --nostream</code></pre>
-            <p>Separate platform report validation, score calculation, wallet, Finney connection, and <code>set_weights</code> errors.</p>
+            <p>Separate burn writes, report validation, score calculation, wallet, and Finney connection errors.</p>
           </article>
 
           <article class="troubleshooting-item">
-            <h3>No weights were submitted</h3>
-            <p>Check for a stale, duplicate, wrongly signed, wrong-network, or empty report. The validator must refuse these instead of guessing weights.</p>
+            <h3>The burn vector was not submitted</h3>
+            <p>Confirm the finalized chain is in Burn mode with commit/reveal disabled, the wallet is correct, and the explicit Finney write gate is enabled. Do not enable scoring as a workaround.</p>
+          </article>
+
+          <article class="troubleshooting-item">
+            <h3>Report scoring did not produce a vector</h3>
+            <p>Check for a stale, duplicate, wrongly signed, wrong-network, or empty report. The validator rejects invalid reports instead of guessing weights.</p>
           </article>
 
           <aside class="callout callout--warning">
-            <h3>Do not bypass report validation</h3>
-            <p>A direct weight call cannot repair a bad platform report. Fix the source or configuration before restarting the loop.</p>
+            <h3>Do not change modes to bypass an error</h3>
+            <p>Fix the reported chain, wallet, or report condition. Burn and report scoring are separate operating modes, not recovery mechanisms.</p>
           </aside>
         </section>
 

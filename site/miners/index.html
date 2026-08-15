@@ -45,7 +45,7 @@
         <nav aria-label="Page sections">
           <ul>
             <li><a href="/docs/miners/#prerequisites">Prerequisites</a></li>
-            <li><a href="/docs/miners/#installer">One-line setup</a></li>
+            <li><a href="/docs/miners/#installer">Availability</a></li>
             <li><a href="/docs/miners/#identity">Hotkeys and UIDs</a></li>
             <li><a href="/docs/miners/#capabilities">Capabilities</a></li>
             <li><a href="/docs/miners/#limits">Limits</a></li>
@@ -66,20 +66,19 @@
         </header>
 
         <aside class="callout callout--warning" aria-labelledby="miner-status-title">
-          <h2 id="miner-status-title">The public installer is not available yet</h2>
+          <h2 id="miner-status-title">The public installer is unavailable</h2>
           <p>
-            Release signing and publication are still pending. The official command
-            will appear on this page only after its version, public key, verifier,
-            and platform identity are pinned. Ignore commands shared elsewhere.
+            Instant does not currently provide a public installation command. Do not
+            run installer commands shared through unofficial channels.
           </p>
         </aside>
 
         <section id="prerequisites" aria-labelledby="prerequisites-title">
           <h2 id="prerequisites-title">Prerequisites</h2>
           <ul class="check-list">
-            <li>A supported NVIDIA GPU host running 64-bit Linux with current drivers.</li>
-            <li>Enough VRAM, RAM, and disk for the currently approved model and serving engine.</li>
-            <li>A clean host supported by the launch release; the public installer will install the approved backend and model.</li>
+            <li>Exactly one visible NVIDIA GPU with at least 31,744 MiB VRAM, compute capability 8.0+, and driver 570+.</li>
+            <li>Enough host RAM and disk for the approved GPT-OSS-20B model and serving engine.</li>
+            <li>A clean Linux host compatible with the signed Miner Kit release.</li>
             <li>Outbound DNS, HTTPS, and secure WebSocket access on port 443.</li>
             <li>An operational Bittensor hotkey already registered on the intended network and subnet.</li>
             <li>Administrator access for the signed package installation and system service setup.</li>
@@ -92,32 +91,12 @@
         </section>
 
         <section id="installer" aria-labelledby="installer-title">
-          <p class="eyebrow">Expected setup experience</p>
-          <h2 id="installer-title">One command, after publication</h2>
-          <pre class="command" data-copy="false" aria-label="Installer publication status"><code>Installer command: not yet published</code></pre>
-          <p>When released, the one-line installer will:</p>
-          <ol class="steps">
-            <li>
-              <h3>Verify the host</h3>
-              <p>Check the operating system, architecture, GPU, driver, disk, network, local backend, and model identity before changing the machine.</p>
-            </li>
-            <li>
-              <h3>Verify the release</h3>
-              <p>Download a pinned manifest and package, verify their digests and release signature, and stop if any trust anchor differs.</p>
-            </li>
-            <li>
-              <h3>Enter UID and hotkey</h3>
-              <p>Prompt for the current SN46 UID and local operational hotkey, then sign one WSS onboarding challenge locally.</p>
-            </li>
-            <li>
-              <h3>Connect and qualify</h3>
-              <p>Install the unprivileged worker service, connect outbound, advertise bounded capabilities, and wait for platform readiness checks.</p>
-            </li>
-            <li>
-              <h3>Return a public profile</h3>
-              <p>Print the miner's public profile at <code>instantsubnet.com/miners/&lt;hotkey&gt;</code>, where connection and serving statistics can be reviewed.</p>
-            </li>
-          </ol>
+          <p class="eyebrow">Installation</p>
+          <h2 id="installer-title">Public access unavailable</h2>
+          <p>
+            Miner onboarding is not open to the public. Public installation is not
+            supported.
+          </p>
         </section>
 
         <section id="identity" aria-labelledby="identity-title">
@@ -174,7 +153,8 @@
           <h2 id="limits-title">Important limits</h2>
           <ul class="check-list check-list--limits">
             <li>A valid registration is not enough: the first inference/TOPLOC canary must pass before customer routing.</li>
-            <li>The launch release supports one reviewed GPU/model/backend profile.</li>
+            <li>The supported release uses one capability-based NVIDIA/model/backend profile, not a product-name allowlist.</li>
+            <li>Meeting the static GPU floor makes a host a candidate; each GPU family must pass an inference and TOPLOC canary before routing.</li>
             <li>Self-reported GPU and capacity data are advisory. Platform-observed health and TOPLOC outcomes control routing.</li>
             <li>A signed receipt proves who committed to the delivered bytes; it does not prove which model generated them.</li>
             <li>A failed, missing, or expired verification may cause the platform to place the miner on temporary hold for review.</li>
