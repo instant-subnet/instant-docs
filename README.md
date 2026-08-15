@@ -13,7 +13,7 @@ This repository owns only public product documentation:
 - [Overview](site/index.html) — what Instant does and how an inference request moves;
 - [About](site/about/index.html) — the public architecture and responsibility boundaries;
 - [Miner guide](site/miners/index.html) — installation, UID/hotkey onboarding, and limitations;
-- [Validator guide](site/validators/index.html) — PM2 setup, metrics scoring, and direct weights;
+- [Validator guide](site/validators/index.html) — PM2 setup, production burn, shadow scoring, and gated direct weights;
 - [Troubleshooting](site/troubleshooting/index.html) — public, non-sensitive recovery checks.
 
 It contains no platform runtime, UI application source, miner or validator service, H200 verifier,

@@ -125,7 +125,7 @@
             <li>The public Miner Kit remains unavailable until its one-line release is complete and tested.</li>
             <li>Workers initiate outbound TLS WebSocket connections; miners do not need to expose an inference port.</li>
             <li>Customer output streams immediately; TOPLOC verification happens asynchronously and affects future routing.</li>
-            <li>The launch validator is a small Finney/SN46 service that fetches completed platform metrics and calls direct <code>set_weights</code>.</li>
+            <li>The launch validator keeps 100% burn on-chain through testing while logging report-derived shadow weights; scoring writes begin only at explicit final go-live.</li>
           </ul>
           <p><a class="text-link" href="/docs/about/">Read the product principles and claim boundaries</a></p>
         </section>
