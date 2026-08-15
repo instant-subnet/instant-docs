@@ -1,0 +1,7 @@
+# Local operational evidence and legacy handoffs can contain infrastructure
+# identifiers. Preserve them beside the docs checkout, but never publish them.
+/private/
+
+# Local test artifacts.
+__pycache__/
+*.py[cod]
