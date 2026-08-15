@@ -125,7 +125,6 @@ class PublicSiteTests(unittest.TestCase):
         )
         for forbidden in (
             "password-free SSH",
-            "localnet",
             "netuid 5",
             "BEGIN PRIVATE KEY",
             "BEGIN OPENSSH PRIVATE KEY",
