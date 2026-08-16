@@ -39,14 +39,3 @@ are required.
 ```bash
 python -m unittest discover -s tests -v
 ```
-
-## Public-content rules
-
-- Never publish credentials, seeds, private keys, wallet files, customer data, prompts, or output.
-- Never publish host addresses, private topology, local test endpoints, operator identities,
-  incident logs, deployment snapshots, or private operations instructions.
-- Finney and subnet 46 are the production defaults. Custom/local chains are explicit private
-  overrides, not the public base workflow.
-- Describe only released behavior. Mark unavailable work plainly and remove stale claims when the
-  implementation changes.
-- Test every published command from a clean supported environment.
