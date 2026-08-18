@@ -10,11 +10,11 @@ from urllib.parse import urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 SITE = ROOT / "site"
 PAGES = {
-    "/docs/": SITE / "index.html",
-    "/docs/about/": SITE / "about" / "index.html",
-    "/docs/miners/": SITE / "miners" / "index.html",
-    "/docs/validators/": SITE / "validators" / "index.html",
-    "/docs/troubleshooting/": SITE / "troubleshooting" / "index.html",
+    "/": SITE / "index.html",
+    "/about/": SITE / "about" / "index.html",
+    "/miners/": SITE / "miners" / "index.html",
+    "/validators/": SITE / "validators" / "index.html",
+    "/troubleshooting/": SITE / "troubleshooting" / "index.html",
 }
 
 
@@ -87,15 +87,15 @@ class PublicSiteTests(unittest.TestCase):
                 self.assertEqual(page.inline_script_text.strip(), "")
                 self.assertEqual(
                     page.stylesheets,
-                    ["/docs/assets/docs.css"],
+                    ["/assets/docs.css"],
                 )
                 self.assertEqual(
                     [script.get("src") for script in page.scripts],
-                    ["/docs/assets/docs.js"],
+                    ["/assets/docs.js"],
                 )
                 self.assertEqual(
                     page.canonicals,
-                    [f"https://instantsubnet.com{route}"],
+                    [f"https://docs.instantsubnet.com{route}"],
                 )
 
     def test_internal_routes_and_fragments_resolve(self) -> None:
@@ -106,7 +106,7 @@ class PublicSiteTests(unittest.TestCase):
                 if target.scheme or target.netloc:
                     continue
                 with self.subTest(source=source_route, href=href):
-                    self.assertTrue(target.path.startswith("/docs/"))
+                    self.assertTrue(target.path.startswith("/"))
                     self.assertIn(target.path, PAGES)
                     if target.fragment:
                         self.assertIn(target.fragment, parsed[target.path].ids)
@@ -139,7 +139,6 @@ class PublicSiteTests(unittest.TestCase):
             for path in [SITE / "assets" / "docs.css", *PAGES.values()]
         )
         self.assertNotIn('url("/assets/', public_assets)
-        self.assertNotIn('href="/assets/', public_assets)
 
 
 if __name__ == "__main__":
