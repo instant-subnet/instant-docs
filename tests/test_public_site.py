@@ -97,6 +97,10 @@ class PublicSiteTests(unittest.TestCase):
                     page.canonicals,
                     [f"https://docs.instantsubnet.com{route}"],
                 )
+                self.assertEqual(
+                    page.hrefs.count("https://instantsubnet.com/"),
+                    1,
+                )
 
     def test_internal_routes_and_fragments_resolve(self) -> None:
         parsed = {route: parse_page(path) for route, path in PAGES.items()}
