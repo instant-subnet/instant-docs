@@ -132,7 +132,10 @@ class PublicSiteTests(unittest.TestCase):
             path.read_text(encoding="utf-8")
             for path in [ROOT / "README.md", *PAGES.values()]
         )
-        self.assertIsNone(re.search(r"\b(?:\d{1,3}\.){3}\d{1,3}\b", public_text))
+        self.assertEqual(
+            set(re.findall(r"\b(?:\d{1,3}\.){3}\d{1,3}\b", public_text)),
+            {"127.0.0.1"},
+        )
         self.assertIsNone(
             re.search(r"\b[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}\b", public_text)
         )
@@ -152,6 +155,47 @@ class PublicSiteTests(unittest.TestCase):
             for path in [SITE / "assets" / "docs.css", *PAGES.values()]
         )
         self.assertNotIn('url("/assets/', public_assets)
+
+    def test_miner_docs_match_the_public_phase_three_workflow(self) -> None:
+        miner = PAGES["/miners/"].read_text(encoding="utf-8")
+        troubleshooting = PAGES["/troubleshooting/"].read_text(encoding="utf-8")
+        overview = PAGES["/"].read_text(encoding="utf-8")
+        about = PAGES["/about/"].read_text(encoding="utf-8")
+
+        for expected in (
+            "curl -fsSL https://instantsubnet.com/miner/install | sudo bash",
+            "Enter the registered Miner UID",
+            "Enter the registered SS58 hotkey",
+            'sudo "$MINER_CLI" status',
+            'sudo "$MINER_CLI" stats',
+            'sudo "$MINER_CLI" update check',
+            'sudo "$MINER_CLI" update apply',
+            "127.0.0.1:8787",
+            "Miner Kit never auto-updates",
+            "131,072-token combined context",
+        ):
+            with self.subTest(expected=expected):
+                self.assertIn(expected, miner)
+
+        for expected in (
+            "instant-worker.service",
+            "instant-vllm.service",
+            "The installer cannot find my hotkey",
+            "Does Instant limit generation to 64 tokens?",
+            "Local statistics do not store prompts",
+        ):
+            with self.subTest(expected=expected):
+                self.assertIn(expected, troubleshooting)
+
+        public_miner_text = "\n".join((miner, overview, about))
+        for stale in (
+            "public installer is unavailable",
+            "public miner installer is not published",
+            "Public access unavailable",
+            "Miner participation is not open to the public",
+        ):
+            with self.subTest(stale=stale):
+                self.assertNotIn(stale.casefold(), public_miner_text.casefold())
 
 
 if __name__ == "__main__":

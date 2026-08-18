@@ -50,6 +50,8 @@
           <ul>
             <li><a href="/troubleshooting/#before-sharing">Before sharing output</a></li>
             <li><a href="/troubleshooting/#miner">Miner checks</a></li>
+            <li><a href="/troubleshooting/#miner-logs">Miner logs</a></li>
+            <li><a href="/troubleshooting/#miner-faq">Miner FAQ</a></li>
             <li><a href="/troubleshooting/#connection">Connection issues</a></li>
             <li><a href="/troubleshooting/#validator">Validator checks</a></li>
             <li><a href="/troubleshooting/#support">Support bundle</a></li>
@@ -89,22 +91,28 @@
 
         <section id="miner" aria-labelledby="miner-title">
           <p class="eyebrow">Miner</p>
-          <h2 id="miner-title">Check the GPU, backend, and worker in that order</h2>
+          <h2 id="miner-title">Start with the Miner Kit status command</h2>
 
           <article class="troubleshooting-item">
-            <h3>1. Confirm the GPU and driver are visible</h3>
+            <h3>1. Check readiness</h3>
+            <pre class="command"><code>sudo /opt/instant-miner/current/bin/instant-miner-kit status</code></pre>
+            <p>Platform state must be connected, and routing, vLLM, and TOPLOC must all be ready. Model loading after installation, update, or restart can take several minutes.</p>
+          </article>
+
+          <article class="troubleshooting-item">
+            <h3>2. Confirm the GPU and driver are visible</h3>
             <pre class="command"><code>nvidia-smi</code></pre>
             <p>Look for the expected GPU, a loaded driver, available memory, and no unknown process consuming the model's allocation.</p>
           </article>
 
           <article class="troubleshooting-item">
-            <h3>2. Check the local inference backend</h3>
+            <h3>3. Check the local inference backend</h3>
             <pre class="command"><code>curl --fail --silent --show-error http://localhost:8000/health</code></pre>
             <p>An empty successful response is normal for vLLM health. A connection failure means the backend must be fixed before the worker can qualify.</p>
           </article>
 
           <article class="troubleshooting-item">
-            <h3>3. Run the signed Miner Kit preflight</h3>
+            <h3>4. Run the signed Miner Kit preflight</h3>
             <pre class="command"><code>sudo runuser --user instant-miner -- \
   /opt/instant-miner/current/bin/instant-miner-kit preflight \
   --config /etc/instant-miner/worker.env</code></pre>
@@ -112,15 +120,53 @@
           </article>
 
           <article class="troubleshooting-item">
-            <h3>4. Inspect service state</h3>
+            <h3>5. Inspect service state</h3>
             <pre class="command"><code>sudo systemctl status --no-pager instant-worker.service</code></pre>
             <p>Check whether the service is active, its last exit status, and whether it is restarting repeatedly.</p>
           </article>
 
+        </section>
+
+        <section id="miner-logs" aria-labelledby="miner-logs-title">
+          <p class="eyebrow">Service logs</p>
+          <h2 id="miner-logs-title">Read bounded worker and vLLM logs</h2>
+          <p>The Rust launcher and Python worker use <code>instant-worker.service</code>. The loopback model uses <code>instant-vllm.service</code>. Journald is the canonical service log.</p>
+          <pre class="command"><code>sudo /opt/instant-miner/current/bin/instant-miner-kit logs --service worker --lines 200
+sudo /opt/instant-miner/current/bin/instant-miner-kit logs --service vllm --lines 200</code></pre>
+          <p>Equivalent direct commands are:</p>
+          <pre class="command"><code>sudo journalctl -u instant-worker.service -n 200 --no-pager
+sudo journalctl -u instant-vllm.service -n 200 --no-pager</code></pre>
+          <p>Review output locally before sharing it. Do not paste unrestricted journal archives into a support channel.</p>
+        </section>
+
+        <section id="miner-faq" aria-labelledby="miner-faq-title">
+          <p class="eyebrow">Miner FAQ</p>
+          <h2 id="miner-faq-title">Common setup and operations questions</h2>
+
           <article class="troubleshooting-item">
-            <h3>5. Read a bounded log tail</h3>
-            <pre class="command"><code>sudo journalctl -u instant-worker.service -n 100 --no-pager</code></pre>
-            <p>Review the output locally. Logs are not guaranteed to redact application data and should not be pasted directly into a support channel.</p>
+            <h3>The installer cannot find my hotkey</h3>
+            <p>Enter the exact operational hotkey file path when prompted. It must be inside a Bittensor wallet <code>hotkeys</code> directory and resolve to the SS58 address you entered. Never enter a seed phrase, mnemonic, private coldkey, or wallet password as a workaround.</p>
+          </article>
+
+          <article class="troubleshooting-item">
+            <h3>The localhost operations page does not open</h3>
+            <p>The page listens only on <code>127.0.0.1:8787</code>. Keep the SSH tunnel open and confirm the local service:</p>
+            <pre class="command"><code>sudo systemctl status instant-miner-ops.service --no-pager</code></pre>
+          </article>
+
+          <article class="troubleshooting-item">
+            <h3>An update failed</h3>
+            <p>The updater verifies the archive and signature before activation. A failed install or readiness check restores the prior application release. Run <code>update check</code>, inspect the bounded worker and vLLM logs above, and use <code>rollback</code> only when a previous signed release is retained.</p>
+          </article>
+
+          <article class="troubleshooting-item">
+            <h3>Does Instant limit generation to 64 tokens?</h3>
+            <p>No. Miner Kit does not set a default completion limit. Without a customer-supplied limit, generation continues until the model stops or the remaining 131,072-token combined context is exhausted.</p>
+          </article>
+
+          <article class="troubleshooting-item">
+            <h3>What is stored in local statistics?</h3>
+            <p>Only operational identifiers, token counts, timings, terminal state, proof-delivery outcome, and sanitized error codes. Local statistics do not store prompts, reasoning, generated text, API keys, proof bytes, nonces, seeds, or private coldkeys.</p>
           </article>
         </section>
 
@@ -137,7 +183,7 @@
                 <tr><th scope="row">Cannot connect</th><td>DNS, TLS, clock, gateway URL, or platform identity mismatch.</td><td>Confirm system time and outbound HTTPS access; then run the signed Miner Kit preflight above.</td></tr>
                 <tr><th scope="row">Connected, not ready</th><td>Backend health, model digest, capacity, or heartbeat qualification.</td><td>Check local backend health and the bounded worker log tail.</td></tr>
                 <tr><th scope="row">Ready, no ordinary traffic</th><td>The worker may be canary-only or on a temporary platform hold after verification.</td><td>Open the public miner profile and review its latest TOPLOC status with the platform operator.</td></tr>
-                <tr><th scope="row">Identity rejected</th><td>The submitted Finney/SN46 UID and hotkey do not map to one another, or the signature failed.</td><td>Confirm both public values and that the selected local wallet controls the submitted hotkey.</td></tr>
+                <tr><th scope="row">Identity rejected</th><td>The submitted SN46 UID and hotkey do not map to one another, or the signature failed.</td><td>Confirm both public values and that the selected local wallet controls the submitted hotkey.</td></tr>
                 <tr><th scope="row">Receipt rejected</th><td>Request binding, response binding, token counts, sequence, or signing identity failed.</td><td>Preserve the request ID and bounded error code; do not resend customer content.</td></tr>
               </tbody>
             </table>
@@ -180,7 +226,7 @@
           <h2 id="support-title">Create a bounded support bundle</h2>
           <p>After the signed Miner Kit is installed, use its redacting diagnostics command:</p>
           <pre class="command"><code>sudo /opt/instant-miner/current/bin/instant-miner-kit diagnostics \
-  --config /etc/instant-miner/worker.env &gt; instant-diagnostics.json</code></pre>
+  &gt; instant-diagnostics.json</code></pre>
           <p>Before sharing the file:</p>
           <ol>
             <li>Open it locally and confirm no secret or customer content is present.</li>

@@ -12,7 +12,7 @@ This repository owns only public product documentation:
 
 - [Overview](site/index.html) — what Instant does and how an inference request moves;
 - [About](site/about/index.html) — the public architecture and responsibility boundaries;
-- [Miner guide](site/miners/index.html) — installation, UID/hotkey onboarding, and limitations;
+- [Miner guide](site/miners/index.html) — installation, UID/hotkey onboarding, SSH/localhost operations, manual updates, and limitations;
 - [Validator guide](site/validators/index.html) — PM2 setup, burn behavior, requirements, and limitations;
 - [Troubleshooting](site/troubleshooting/index.html) — public, non-sensitive recovery checks.
 
