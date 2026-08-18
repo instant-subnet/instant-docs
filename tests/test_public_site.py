@@ -118,7 +118,16 @@ class PublicSiteTests(unittest.TestCase):
     def test_assets_exist_and_pages_contain_no_operational_disclosures(self) -> None:
         self.assertTrue((SITE / "assets" / "docs.css").is_file())
         self.assertTrue((SITE / "assets" / "docs.js").is_file())
+        self.assertTrue((SITE / "assets" / "instant-mark-light.svg").is_file())
+        self.assertTrue((SITE / "assets" / "instant-mark-dark.svg").is_file())
         self.assertTrue((SITE / "assets" / "favicon.svg").is_file())
+        for path in PAGES.values():
+            page = path.read_text(encoding="utf-8")
+            self.assertIn('class="docs-brand-mark-light"', page)
+            self.assertIn('class="docs-brand-mark-dark"', page)
+            self.assertNotIn('aria-hidden="true">IN</span>', page)
+            self.assertIn('<a href="https://instantsubnet.com/">Home</a>', page)
+            self.assertNotIn(">Website</a>", page)
         public_text = "\n".join(
             path.read_text(encoding="utf-8")
             for path in [ROOT / "README.md", *PAGES.values()]
