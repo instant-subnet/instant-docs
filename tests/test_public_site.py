@@ -193,9 +193,59 @@ class PublicSiteTests(unittest.TestCase):
             "public miner installer is not published",
             "Public access unavailable",
             "Miner participation is not open to the public",
+            "public miner profile",
         ):
             with self.subTest(stale=stale):
                 self.assertNotIn(stale.casefold(), public_miner_text.casefold())
+
+    def test_validator_docs_match_the_public_phase_four_workflow(self) -> None:
+        validator = PAGES["/validators/"].read_text(encoding="utf-8")
+        troubleshooting = PAGES["/troubleshooting/"].read_text(encoding="utf-8")
+        public_text = "\n".join(
+            path.read_text(encoding="utf-8")
+            for path in [ROOT / "README.md", *PAGES.values()]
+        )
+
+        for expected in (
+            "python3 scripts/start_validator.py",
+            "python3 scripts/update_validator.py --once",
+            "pm2 startup",
+            "pm2 status instant-validator-updater",
+            "crontab -l | grep instant-validator-run-once",
+            "scripts/run_validator.sh",
+            "instant-validator-updater",
+            "60 × speed_bps",
+            "normalized_weight = floor(score_bps × 65,535 / highest_score_bps)",
+            "Ninety percent performance, ten percent discovery",
+            "Update or restore the schedules",
+        ):
+            with self.subTest(expected=expected):
+                self.assertIn(expected, validator)
+
+        for expected in (
+            "empty Miner list",
+            "instant-validator-updater",
+            "configured network, netuid, Platform signer",
+        ):
+            with self.subTest(expected=expected):
+                self.assertIn(expected, troubleshooting)
+
+        for stale in (
+            "Finney is the public default",
+            "Process each finalized Miner report once",
+            "report_already_processed",
+            "/validator/v1/reports/latest",
+            "period_end_block",
+            "100% burn",
+            "burn mode",
+            "shadow mode",
+            "NOT SUBMITTED",
+            "performance vector",
+            "weight submission",
+            "modes are mutually exclusive",
+        ):
+            with self.subTest(stale=stale):
+                self.assertNotIn(stale.casefold(), public_text.casefold())
 
 
 if __name__ == "__main__":

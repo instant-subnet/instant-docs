@@ -13,7 +13,7 @@ This repository owns only public product documentation:
 - [Overview](site/index.html) — what Instant does and how an inference request moves;
 - [About](site/about/index.html) — the public architecture and responsibility boundaries;
 - [Miner guide](site/miners/index.html) — installation, UID/hotkey onboarding, SSH/localhost operations, manual updates, and limitations;
-- [Validator guide](site/validators/index.html) — PM2 setup, burn behavior, requirements, and limitations;
+- [Validator guide](site/validators/index.html) — installation, daily operation, scoring, routing, updates, and limitations;
 - [Troubleshooting](site/troubleshooting/index.html) — public, non-sensitive recovery checks.
 
 It contains no runtime code, private deployment data, incident evidence, or secret material.
@@ -26,7 +26,7 @@ rooted at `/`; it has no runtime dependency on platform-owned assets.
 The hosting machine owns only:
 
 - the `docs.instantsubnet.com` Nginx virtual host rooted at `/srv/instant-docs/site`;
-- the Docs navigation/footer link.
+- the website's Docs navigation link.
 
 The normal checkout is the live static artifact. The updater follows the established Instant
 deployment pattern: every five minutes it runs `git pull --rebase --autostash`, detects a changed
@@ -68,8 +68,7 @@ checkout or document root.
 - Never publish credentials, seeds, private keys, wallet files, customer data, prompts, or output.
 - Never publish host addresses, private topology, local test endpoints, operator identities,
   incident logs, deployment snapshots, or private operations instructions.
-- Finney and subnet 46 are the production defaults. Custom/local chains are explicit private
-  overrides, not the public base workflow.
+- Validator network and netuid settings must match the operator's intended subnet.
 - Describe only released behavior. Mark unavailable work plainly and remove stale claims when the
   implementation changes.
 - Test every published command from a clean supported environment.
