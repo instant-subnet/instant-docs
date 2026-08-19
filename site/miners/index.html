@@ -49,6 +49,7 @@
         <nav aria-label="Page sections">
           <ul>
             <li><a href="/miners/#quick-start">Quick start</a></li>
+            <li><a href="/miners/#noninteractive">Non-interactive setup</a></li>
             <li><a href="/miners/#prerequisites">Prerequisites</a></li>
             <li><a href="/miners/#identity">Hotkeys and UIDs</a></li>
             <li><a href="/miners/#operations">Operations</a></li>
@@ -86,6 +87,33 @@
             wallet directories for the matching operational hotkey. If it cannot find
             exactly one match, it asks for the hotkey file's exact path and verifies
             that it resolves to the SS58 address entered above.
+          </p>
+        </section>
+
+        <section id="noninteractive" aria-labelledby="noninteractive-title">
+          <p class="eyebrow">Advanced setup</p>
+          <h2 id="noninteractive-title">Provide setup values for repeat installations</h2>
+          <p>
+            Operators installing more than one host may provide the public UID,
+            public SS58 hotkey, and operational hotkey file path without answering
+            the installer prompts:
+          </p>
+          <pre class="command"><code>curl -fsSL https://instantsubnet.com/miner/install | sudo env \
+  INSTANT_SETUP_UID=MINER_UID \
+  INSTANT_SETUP_HOTKEY=MINER_SS58_HOTKEY \
+  INSTANT_SETUP_HOTKEY_PATH=/path/to/wallet/hotkeys/HOTKEY_NAME \
+  bash</code></pre>
+          <p>
+            <code>INSTANT_SETUP_HOTKEY_PATH</code> is optional when the installer can
+            uniquely discover the matching hotkey. Advanced wallet layouts may instead
+            set <code>INSTANT_SETUP_WALLET_PATH</code> together with both
+            <code>INSTANT_SETUP_WALLET_NAME</code> and
+            <code>INSTANT_SETUP_WALLET_HOTKEY</code>.
+          </p>
+          <p>
+            These values identify an already-registered operational hotkey. Never put a
+            seed phrase, mnemonic, private coldkey, or wallet password in an environment
+            variable or installer command.
           </p>
         </section>
 

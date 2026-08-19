@@ -164,6 +164,12 @@ class PublicSiteTests(unittest.TestCase):
 
         for expected in (
             "curl -fsSL https://instantsubnet.com/miner/install | sudo bash",
+            "INSTANT_SETUP_UID=MINER_UID",
+            "INSTANT_SETUP_HOTKEY=MINER_SS58_HOTKEY",
+            "INSTANT_SETUP_HOTKEY_PATH=/path/to/wallet/hotkeys/HOTKEY_NAME",
+            "INSTANT_SETUP_WALLET_PATH",
+            "INSTANT_SETUP_WALLET_NAME",
+            "INSTANT_SETUP_WALLET_HOTKEY",
             "Enter the registered Miner UID",
             "Enter the registered SS58 hotkey",
             'sudo "$MINER_CLI" status',
