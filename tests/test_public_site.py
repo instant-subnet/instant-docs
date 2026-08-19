@@ -208,6 +208,13 @@ class PublicSiteTests(unittest.TestCase):
 
         for expected in (
             "python3 scripts/start_validator.py",
+            "INSTANT_NETWORK=&lt;network&gt;",
+            "INSTANT_NETUID=&lt;netuid&gt;",
+            "INSTANT_PLATFORM_REPORT_URL=https://api.instantsubnet.com/validator/v1/reports/latest",
+            "INSTANT_PLATFORM_SIGNER=&lt;official Platform signer SS58&gt;",
+            "INSTANT_WALLET_NAME=&lt;wallet name&gt;",
+            "INSTANT_WALLET_HOTKEY=&lt;hotkey name&gt;",
+            "INSTANT_WALLET_PATH=~/.bittensor/wallets",
             "python3 scripts/update_validator.py --once",
             "pm2 startup",
             "pm2 status instant-validator-updater",
@@ -234,7 +241,6 @@ class PublicSiteTests(unittest.TestCase):
             "Finney is the public default",
             "Process each finalized Miner report once",
             "report_already_processed",
-            "/validator/v1/reports/latest",
             "period_end_block",
             "100% burn",
             "burn mode",
