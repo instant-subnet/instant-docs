@@ -136,17 +136,33 @@ button {
 }
 
 .docs-brand-mark {
-  display: grid;
-  width: 33px;
-  height: 33px;
-  place-items: center;
-  border: 1px solid var(--line-strong);
-  border-radius: 11px;
-  color: var(--surface-strong);
-  background: var(--instant-blue);
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.25);
-  font-size: 17px;
-  line-height: 1;
+  position: relative;
+  display: block;
+  width: 36px;
+  height: 30px;
+  flex: 0 0 36px;
+}
+
+.docs-brand-mark img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.docs-brand-mark-dark {
+  visibility: hidden;
+  opacity: 0;
+}
+
+html[data-theme="dark"] .docs-brand-mark-light {
+  visibility: hidden;
+  opacity: 0;
+}
+
+html[data-theme="dark"] .docs-brand-mark-dark {
+  visibility: visible;
+  opacity: 1;
 }
 
 .docs-nav {
@@ -439,6 +455,7 @@ html[data-theme="dark"] .button--primary {
   background: var(--surface);
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   font-size: 0.88em;
+  overflow-wrap: anywhere;
 }
 
 .callout {

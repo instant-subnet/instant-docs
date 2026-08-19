@@ -7,26 +7,30 @@
     <meta name="robots" content="index, follow">
     <meta id="theme-color" name="theme-color" content="#d9e0e9">
     <title>About Instant · Instant Docs</title>
-    <link rel="canonical" href="https://instantsubnet.com/docs/about/">
-    <link rel="icon" type="image/svg+xml" href="/docs/assets/favicon.svg">
-    <link rel="stylesheet" href="/docs/assets/docs.css">
-    <script src="/docs/assets/docs.js" defer></script>
+    <link rel="canonical" href="https://docs.instantsubnet.com/about/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="stylesheet" href="/assets/docs.css">
+    <script src="/assets/docs.js" defer></script>
   </head>
   <body>
-    <a class="skip-link" href="/docs/about/#main-content">Skip to content</a>
+    <a class="skip-link" href="/about/#main-content">Skip to content</a>
     <header class="docs-header">
       <div class="docs-header-inner">
-        <a class="docs-brand" href="/docs/" aria-label="Instant documentation home">
-          <span class="docs-brand-mark" aria-hidden="true">IN</span>
+        <a class="docs-brand" href="/" aria-label="Instant documentation home">
+          <span class="docs-brand-mark" aria-hidden="true">
+            <img class="docs-brand-mark-light" src="/assets/instant-mark-light.svg" alt="" width="100" height="81">
+            <img class="docs-brand-mark-dark" src="/assets/instant-mark-dark.svg" alt="" width="100" height="81">
+          </span>
           <span>Instant Docs</span>
         </a>
         <nav class="docs-nav" id="docs-nav" aria-label="Primary navigation">
           <ul>
-            <li><a href="/docs/">Overview</a></li>
-            <li><a href="/docs/miners/">Miners</a></li>
-            <li><a href="/docs/validators/">Validators</a></li>
-            <li><a href="/docs/troubleshooting/">Troubleshooting</a></li>
-            <li><a href="/docs/about/" aria-current="page">About</a></li>
+            <li><a href="/">Overview</a></li>
+            <li><a href="/miners/">Miners</a></li>
+            <li><a href="/validators/">Validators</a></li>
+            <li><a href="/troubleshooting/">Troubleshooting</a></li>
+            <li><a href="/about/" aria-current="page">About</a></li>
+            <li><a href="https://instantsubnet.com/">Home</a></li>
           </ul>
         </nav>
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">
@@ -44,11 +48,11 @@
         <h2>About Instant</h2>
         <nav aria-label="Page sections">
           <ul>
-            <li><a href="/docs/about/#purpose">Purpose</a></li>
-            <li><a href="/docs/about/#architecture">Architecture</a></li>
-            <li><a href="/docs/about/#principles">Principles</a></li>
-            <li><a href="/docs/about/#claims">Claim boundaries</a></li>
-            <li><a href="/docs/about/#links">Official links</a></li>
+            <li><a href="/about/#purpose">Purpose</a></li>
+            <li><a href="/about/#architecture">Architecture</a></li>
+            <li><a href="/about/#principles">Principles</a></li>
+            <li><a href="/about/#claims">Claim boundaries</a></li>
+            <li><a href="/about/#links">Official links</a></li>
           </ul>
         </nav>
       </aside>
@@ -60,8 +64,8 @@
           <p class="lede">
             Instant is an OpenAI-compatible inference network for
             Bittensor. Independent miners contribute GPU capacity through outbound
-            connections, while validators inspect signed delivery evidence and
-            derive weights from completed platform metrics on Finney subnet 46.
+            connections, while validators authenticate signed aggregate reports and
+            calculate deterministic Miner scores for the configured subnet.
           </p>
         </header>
 
@@ -81,7 +85,7 @@
             <article class="card">
               <p class="eyebrow">Consensus</p>
               <h3>Validators</h3>
-              <p>Submit a 100% burn vote by default. Report-scoring mode validates signed platform metrics and derives one deterministic weight vector.</p>
+              <p>Authenticate signed Platform reports and calculate deterministic per-Miner scores.</p>
             </article>
           </div>
         </section>
@@ -129,13 +133,12 @@
         <section aria-labelledby="availability-title">
           <h2 id="availability-title">Availability</h2>
           <p>
-            Miner participation is not open to the public, and no public installer
-            is available. Use only signed releases and commands published through
-            Instant's official channels.
+            Miner participation uses the signed installer and release instructions
+            published in these docs. Do not run unofficial installation commands.
           </p>
           <div class="actions">
-            <a class="button button--primary" href="/docs/miners/">Read the miner guide</a>
-            <a class="button" href="/docs/validators/">Read the validator guide</a>
+            <a class="button button--primary" href="/miners/">Read the miner guide</a>
+            <a class="button" href="/validators/">Read the validator guide</a>
           </div>
         </section>
 
@@ -155,9 +158,9 @@
       <div class="docs-footer-inner">
         <p>© <span data-current-year></span> Instant · About the network</p>
         <nav aria-label="Footer navigation">
-          <a href="/docs/miners/">Miner guide</a>
-          <a href="/docs/validators/">Validator guide</a>
-          <a href="/docs/troubleshooting/">Get help</a>
+          <a href="/miners/">Miner guide</a>
+          <a href="/validators/">Validator guide</a>
+          <a href="/troubleshooting/">Get help</a>
         </nav>
       </div>
     </footer>

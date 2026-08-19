@@ -3,30 +3,34 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Official prerequisites, read-only workflow, network boundaries, and limitations for Instant validators.">
+    <meta name="description" content="Install, operate, update, and troubleshoot an Instant validator.">
     <meta name="robots" content="index, follow">
     <meta id="theme-color" name="theme-color" content="#d9e0e9">
     <title>Operate a validator · Instant Docs</title>
-    <link rel="canonical" href="https://instantsubnet.com/docs/validators/">
-    <link rel="icon" type="image/svg+xml" href="/docs/assets/favicon.svg">
-    <link rel="stylesheet" href="/docs/assets/docs.css">
-    <script src="/docs/assets/docs.js" defer></script>
+    <link rel="canonical" href="https://docs.instantsubnet.com/validators/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="stylesheet" href="/assets/docs.css">
+    <script src="/assets/docs.js" defer></script>
   </head>
   <body>
-    <a class="skip-link" href="/docs/validators/#main-content">Skip to content</a>
+    <a class="skip-link" href="/validators/#main-content">Skip to content</a>
     <header class="docs-header">
       <div class="docs-header-inner">
-        <a class="docs-brand" href="/docs/" aria-label="Instant documentation home">
-          <span class="docs-brand-mark" aria-hidden="true">IN</span>
+        <a class="docs-brand" href="/" aria-label="Instant documentation home">
+          <span class="docs-brand-mark" aria-hidden="true">
+            <img class="docs-brand-mark-light" src="/assets/instant-mark-light.svg" alt="" width="100" height="81">
+            <img class="docs-brand-mark-dark" src="/assets/instant-mark-dark.svg" alt="" width="100" height="81">
+          </span>
           <span>Instant Docs</span>
         </a>
         <nav class="docs-nav" id="docs-nav" aria-label="Primary navigation">
           <ul>
-            <li><a href="/docs/">Overview</a></li>
-            <li><a href="/docs/miners/">Miners</a></li>
-            <li><a href="/docs/validators/" aria-current="page">Validators</a></li>
-            <li><a href="/docs/troubleshooting/">Troubleshooting</a></li>
-            <li><a href="/docs/about/">About</a></li>
+            <li><a href="/">Overview</a></li>
+            <li><a href="/miners/">Miners</a></li>
+            <li><a href="/validators/" aria-current="page">Validators</a></li>
+            <li><a href="/troubleshooting/">Troubleshooting</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="https://instantsubnet.com/">Home</a></li>
           </ul>
         </nav>
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">
@@ -44,11 +48,13 @@
         <h2>Validator guide</h2>
         <nav aria-label="Page sections">
           <ul>
-            <li><a href="/docs/validators/#prerequisites">Prerequisites</a></li>
-            <li><a href="/docs/validators/#service">Service setup</a></li>
-            <li><a href="/docs/validators/#networks">Network configuration</a></li>
-            <li><a href="/docs/validators/#evidence">Weight modes</a></li>
-            <li><a href="/docs/validators/#limits">Limitations</a></li>
+            <li><a href="/validators/#quick-start">Quick start</a></li>
+            <li><a href="/validators/#prerequisites">Prerequisites</a></li>
+            <li><a href="/validators/#service">Keep it running</a></li>
+            <li><a href="/validators/#scoring">Scoring</a></li>
+            <li><a href="/validators/#routing">Routing</a></li>
+            <li><a href="/validators/#restart">Updates and restarts</a></li>
+            <li><a href="/validators/#limits">Limitations</a></li>
           </ul>
         </nav>
       </aside>
@@ -56,29 +62,43 @@
       <article class="docs-content">
         <header class="page-header">
           <p class="eyebrow">Validator guide</p>
-          <h1>Run a small, supervised weight service.</h1>
+          <h1>Set up and operate an Instant Validator.</h1>
           <p class="lede">
-            An Instant validator runs one PM2-managed loop on Finney subnet 46. Its
-            default weight plan is a 100% burn vote to the current subnet-owner UID.
+            Install the small Validator service, keep its updater and scheduled run
+            healthy, and inspect per-Miner scoring logs from one Linux host.
           </p>
         </header>
 
-        <aside class="callout callout--warning" aria-labelledby="validator-status-title">
-          <h2 id="validator-status-title">Burn is the default</h2>
+        <section id="quick-start" aria-labelledby="validator-quick-start-title">
+          <p class="eyebrow">Quick start</p>
+          <h2 id="validator-quick-start-title">Install the Validator</h2>
+          <pre class="command"><code>git clone https://github.com/instant-subnet/instant-subnet.git
+cd instant-subnet
+cp .env.example .env</code></pre>
           <p>
-            The checked-in configuration enables burn and disables chain writes. Report
-            scoring and weight submission require explicit private configuration.
+            In <code>.env</code>, confirm the network and netuid, then set the expected
+            Platform signer and the Validator wallet name, hotkey, and wallet path.
+            Start the Validator with:
           </p>
-        </aside>
+          <pre class="command"><code>python3 scripts/start_validator.py</code></pre>
+          <p>
+            The setup prepares the environment, installs the scheduled Validator run,
+            starts the PM2 updater, and saves the PM2 process list.
+          </p>
+          <p>
+            If PM2 startup is not already configured on the host, run
+            <code>pm2 startup</code> once and execute the command it prints.
+          </p>
+        </section>
 
         <section id="prerequisites" aria-labelledby="validator-prerequisites-title">
           <h2 id="validator-prerequisites-title">Prerequisites</h2>
           <ul class="check-list">
-            <li>A Linux host with reliable time, storage, and outbound HTTPS/Finney access.</li>
-            <li>An operational validator hotkey registered on Finney subnet 46 with the required permit and stake.</li>
-            <li>The reviewed Instant validator release and its pinned dependencies.</li>
-            <li>For report scoring, the expected platform report URL and signer identity.</li>
-            <li>A private <code>.env</code> containing wallet and service configuration.</li>
+            <li>A Linux host with Python 3.11+, Git, cron, <code>flock</code>, Node.js, and PM2.</li>
+            <li>Reliable time, storage, outbound HTTPS, and access to the configured chain network.</li>
+            <li>An operational Validator hotkey registered on the target subnet with the required permit and stake.</li>
+            <li>The expected Platform report URL and exact report signer SS58 address.</li>
+            <li>A private <code>.env</code> containing the network identity and wallet location.</li>
           </ul>
           <aside class="callout callout--info">
             <h3>Use an operational hotkey only</h3>
@@ -87,82 +107,102 @@
         </section>
 
         <section id="service" aria-labelledby="service-title">
-          <p class="eyebrow">One supervised process</p>
-          <h2 id="service-title">Configure once and let PM2 run the loop</h2>
-          <ol class="steps">
-            <li>
-              <h3>Create private configuration</h3>
-              <pre class="command"><code>cp .env.example .env</code></pre>
-              <p>Set the validator wallet, platform report URL, schedule, Finney, and netuid 46.</p>
-            </li>
-            <li>
-              <h3>Start the service</h3>
-              <pre class="command"><code>pm2 start ecosystem.config.cjs</code></pre>
-              <p>PM2 supervises one non-interactive validator process.</p>
-            </li>
-            <li>
-              <h3>Inspect bounded status</h3>
-              <pre class="command"><code>pm2 status instant-validator</code></pre>
-              <p>Confirm the service is online and not restarting before inspecting its bounded log tail.</p>
-            </li>
-            <li>
-              <h3>Verify the dry run</h3>
-              <p>Review the resolved owner UID and 100% burn vector before enabling chain writes.</p>
-            </li>
-          </ol>
+          <p class="eyebrow">Daily operation</p>
+          <h2 id="service-title">Keep PM2 and cron healthy</h2>
+          <pre class="command"><code>pm2 status instant-validator-updater
+crontab -l | grep instant-validator-run-once
+tail -n 100 logs/validator.log</code></pre>
           <p>
-            Burn and report-scoring modes are mutually exclusive. Both fail closed on
-            invalid chain or report state. This service does not implement commit/reveal
-            or interactive one-shot commands.
+            The updater should be online in PM2, the Validator cron entry should be
+            present, and the scoring log should show completed scheduled runs. The
+            updater and Validator each wake every five minutes. A shared lock prevents
+            an update and a Validator run from changing the checkout at the same time.
+          </p>
+          <p>
+            Run the Validator once and inspect its live log with:
+          </p>
+          <pre class="command"><code>scripts/run_validator.sh
+tail -f logs/validator.log</code></pre>
+          <p>
+            A healthy scheduled run either logs a newly scored report or records that
+            there is no new work. Repeated failures belong in the
+            <a href="/troubleshooting/#validator">Validator troubleshooting guide</a>.
           </p>
         </section>
 
-        <section id="networks" aria-labelledby="networks-title">
-          <h2 id="networks-title">Finney and subnet 46 are the defaults</h2>
-          <div class="table-wrap">
-            <table>
-              <caption>Configuration ownership</caption>
-              <thead>
-                <tr><th scope="col">Setting</th><th scope="col">Default</th><th scope="col">Override</th></tr>
-              </thead>
-              <tbody>
-                <tr><th scope="row">Network</th><td>Finney</td><td>Private <code>.env</code> or explicit operator flag for testing.</td></tr>
-                <tr><th scope="row">Subnet</th><td>46</td><td>Private testing only.</td></tr>
-                <tr><th scope="row">Metrics</th><td>None in burn mode</td><td>Signed completed report in report-scoring mode.</td></tr>
-                <tr><th scope="row">Weight mode</th><td>100% burn vote</td><td>Report scoring through private configuration.</td></tr>
-              </tbody>
-            </table>
-          </div>
+        <section id="scoring" aria-labelledby="scoring-title">
+          <p class="eyebrow">Deterministic integer math</p>
+          <h2 id="scoring-title">Speed leads the score</h2>
+          <p>
+            The Validator receives signed aggregate metrics for each Miner: UID,
+            hotkey, request counts, verified completion tokens, generation speed, and
+            proof outcomes. Customer prompts and responses are not included. Only
+            proof-verified successful work contributes positive speed and token metrics.
+            Each relative component compares the Miner to the best eligible Miner in
+            that report:
+          </p>
+          <pre class="command"><code>component_bps = floor(miner_value × 10,000 / report_max_value)
+
+score_bps = floor(
+    (60 × speed_bps
+   + 25 × tokens_bps
+   + 10 × requests_bps
+   +  5 × success_bps) / 100
+)
+
+normalized_weight = floor(score_bps × 65,535 / highest_score_bps)</code></pre>
+          <p>
+            A zero report maximum produces a zero component. Success rate is
+            <code>floor(successful_requests × 10,000 / routed_requests)</code>. Any failed
+            or timed-out proof makes that Miner's whole report-epoch score zero, while
+            remaining proofs continue to run and appear in the report. A verified
+            <code>finish_reason=length</code> is successful and all completion tokens count.
+          </p>
+          <p>
+            The scoring log contains one record per Miner with report ID, UID, hotkey,
+            raw metrics, component scores, final score, and normalized weight.
+          </p>
         </section>
 
-        <section id="evidence" aria-labelledby="evidence-title">
-          <p class="eyebrow">Weight submission</p>
-          <h2 id="evidence-title">Burn mode is chain-only</h2>
-          <ol class="flow-list">
-            <li>Read one finalized chain snapshot.</li>
-            <li>Require protocol Burn mode with commit/reveal disabled.</li>
-            <li>Resolve the subnet-owner hotkey, UID, and weight version from that snapshot.</li>
-            <li>Submit the owner UID with weight 65,535 when chain writes are enabled.</li>
-            <li>Wait for the next configured cycle.</li>
-          </ol>
+        <section id="routing" aria-labelledby="routing-title">
+          <p class="eyebrow">Platform routing</p>
+          <h2 id="routing-title">Ninety percent performance, ten percent discovery</h2>
           <p>
-            Report-scoring mode instead verifies one signed, completed-period platform
-            report and applies the documented deterministic formula. The platform owns
-            miner registration checks and supplies each miner's UID and hotkey.
+            The Platform applies smooth weighted scheduling for nine requests, then one
+            equal-discovery request across currently eligible Miners. Before the first
+            report, or when all report weights are zero, routing is equal. New Miners
+            therefore receive discovery traffic and enter the next scoring cycle.
+          </p>
+          <p>
+            Busy, disconnected, held, or unready Miners are skipped even if a report
+            contains a positive weight. The Validator does not connect to or probe Miner
+            hosts; it consumes the Platform's signed aggregate.
+          </p>
+        </section>
+
+        <section id="restart" aria-labelledby="restart-title">
+          <p class="eyebrow">Maintenance</p>
+          <h2 id="restart-title">Update or restore the schedules</h2>
+          <p>Run the same updater manually when you do not want to wait for PM2:</p>
+          <pre class="command"><code>python3 scripts/update_validator.py --once</code></pre>
+          <p>
+            After host maintenance, rerun <code>python3 scripts/start_validator.py</code>
+            to restore the PM2 updater and cron entry. Accepted report state is kept on
+            disk, so a service restart does not score the same report again. Do not
+            delete the Validator state directory during an update or restart.
           </p>
         </section>
 
         <section id="limits" aria-labelledby="validator-limits-title">
           <h2 id="validator-limits-title">Current limitations</h2>
           <ul class="check-list check-list--limits">
-            <li>Report-scoring mode trusts the platform's signed miner roster and metrics.</li>
-            <li>It does not query or probe miners directly.</li>
-            <li>Invalid, stale, duplicate, wrongly signed, wrong-network, or empty reports never reach the scoring writer.</li>
-            <li>There is one scoring formula and one direct writer path.</li>
-            <li>Burn and report scoring cannot run in the same process.</li>
-            <li>Commit/reveal is not supported.</li>
+            <li>Scoring relies on the Platform's signed Miner roster and aggregate metrics.</li>
+            <li>The Validator does not query Miner hosts or inspect customer prompts and responses.</li>
+            <li>Invalid signatures, network settings, report data, or UID/hotkey mappings stop that run.</li>
+            <li>A report with no Miner work is valid and produces no Miner scores.</li>
+            <li>The current release supports one scoring formula and one scheduled workflow.</li>
           </ul>
-          <p><a class="text-link" href="/docs/troubleshooting/#validator">Troubleshoot a validator safely</a></p>
+          <p><a class="text-link" href="/troubleshooting/#validator">Troubleshoot a validator safely</a></p>
         </section>
       </article>
     </main>
@@ -171,8 +211,8 @@
       <div class="docs-footer-inner">
         <p>© <span data-current-year></span> Instant · Validator operations</p>
         <nav aria-label="Footer navigation">
-          <a href="/docs/miners/">Miner guide</a>
-          <a href="/docs/troubleshooting/">Get help</a>
+          <a href="/miners/">Miner guide</a>
+          <a href="/troubleshooting/">Get help</a>
           <a href="https://github.com/instant-subnet" rel="noopener noreferrer">GitHub</a>
         </nav>
       </div>

@@ -7,26 +7,30 @@
     <meta name="robots" content="index, follow">
     <meta id="theme-color" name="theme-color" content="#d9e0e9">
     <title>Instant Docs</title>
-    <link rel="canonical" href="https://instantsubnet.com/docs/">
-    <link rel="icon" type="image/svg+xml" href="/docs/assets/favicon.svg">
-    <link rel="stylesheet" href="/docs/assets/docs.css">
-    <script src="/docs/assets/docs.js" defer></script>
+    <link rel="canonical" href="https://docs.instantsubnet.com/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="stylesheet" href="/assets/docs.css">
+    <script src="/assets/docs.js" defer></script>
   </head>
   <body>
-    <a class="skip-link" href="/docs/#main-content">Skip to content</a>
+    <a class="skip-link" href="/#main-content">Skip to content</a>
     <header class="docs-header">
       <div class="docs-header-inner">
-        <a class="docs-brand" href="/docs/" aria-label="Instant documentation home">
-          <span class="docs-brand-mark" aria-hidden="true">IN</span>
+        <a class="docs-brand" href="/" aria-label="Instant documentation home">
+          <span class="docs-brand-mark" aria-hidden="true">
+            <img class="docs-brand-mark-light" src="/assets/instant-mark-light.svg" alt="" width="100" height="81">
+            <img class="docs-brand-mark-dark" src="/assets/instant-mark-dark.svg" alt="" width="100" height="81">
+          </span>
           <span>Instant Docs</span>
         </a>
         <nav class="docs-nav" id="docs-nav" aria-label="Primary navigation">
           <ul>
-            <li><a href="/docs/" aria-current="page">Overview</a></li>
-            <li><a href="/docs/miners/">Miners</a></li>
-            <li><a href="/docs/validators/">Validators</a></li>
-            <li><a href="/docs/troubleshooting/">Troubleshooting</a></li>
-            <li><a href="/docs/about/">About</a></li>
+            <li><a href="/" aria-current="page">Overview</a></li>
+            <li><a href="/miners/">Miners</a></li>
+            <li><a href="/validators/">Validators</a></li>
+            <li><a href="/troubleshooting/">Troubleshooting</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="https://instantsubnet.com/">Home</a></li>
           </ul>
         </nav>
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">
@@ -44,10 +48,10 @@
         <h2>On this page</h2>
         <nav aria-label="Page sections">
           <ul>
-            <li><a href="/docs/#start">Start here</a></li>
-            <li><a href="/docs/#request-path">Request path</a></li>
-            <li><a href="/docs/#trust-model">Trust model</a></li>
-            <li><a href="/docs/#boundaries">Current boundaries</a></li>
+            <li><a href="/#start">Start here</a></li>
+            <li><a href="/#request-path">Request path</a></li>
+            <li><a href="/#trust-model">Trust model</a></li>
+            <li><a href="/#boundaries">Current boundaries</a></li>
           </ul>
         </nav>
       </aside>
@@ -62,18 +66,19 @@
             a bounded path from observed work to scores.
           </p>
           <div class="actions" aria-label="Choose a documentation path">
-            <a class="button button--primary" href="/docs/miners/">Run a miner</a>
-            <a class="button" href="/docs/validators/">Operate a validator</a>
+            <a class="button button--primary" href="/miners/">Run a miner</a>
+            <a class="button" href="/validators/">Operate a validator</a>
           </div>
         </section>
 
-        <aside class="callout callout--warning" aria-labelledby="availability-title">
-          <h2 id="availability-title">Installer availability</h2>
+        <aside class="callout" aria-labelledby="availability-title">
+          <h2 id="availability-title">Run a Miner</h2>
           <p>
-            The public miner installer is not published yet. Do not run an
-            unofficial installer, and never give a seed phrase, private coldkey, or
-            wallet file to a website or support contact.
+            Register an operational hotkey on SN46, then use the official one-line
+            Miner Kit installer. Setup normally requires only the registered UID and
+            SS58 hotkey. Never provide a seed phrase or private coldkey.
           </p>
+          <p><a class="text-link" href="/miners/#quick-start">Open the Miner quick start</a></p>
         </aside>
 
         <section id="request-path" aria-labelledby="request-path-title">
@@ -122,12 +127,12 @@
           <p class="eyebrow">Current boundaries</p>
           <h2 id="boundaries-title">Conservative by design</h2>
           <ul class="check-list">
-            <li>The public Miner Kit is unavailable; no public installation command is supported.</li>
+            <li>The signed Miner Kit provides one-line installation plus manual update and rollback workflows.</li>
             <li>Workers initiate outbound TLS WebSocket connections; miners do not need to expose an inference port.</li>
             <li>Customer output streams immediately; TOPLOC verification happens asynchronously and affects subsequent routing.</li>
-            <li>The validator defaults to a 100% burn vote. Report-based scoring is a separate, explicitly configured mode.</li>
+            <li>Validators authenticate the same signed aggregate report and calculate the same deterministic per-Miner scores.</li>
           </ul>
-          <p><a class="text-link" href="/docs/about/">Read the product principles and claim boundaries</a></p>
+          <p><a class="text-link" href="/about/">Read the product principles and claim boundaries</a></p>
         </section>
       </article>
     </main>
@@ -136,7 +141,7 @@
       <div class="docs-footer-inner">
         <p>© <span data-current-year></span> Instant · Verifiable inference infrastructure</p>
         <nav aria-label="Footer navigation">
-          <a href="/docs/troubleshooting/">Get help</a>
+          <a href="/troubleshooting/">Get help</a>
           <a href="https://github.com/instant-subnet" rel="noopener noreferrer">GitHub</a>
           <a href="https://x.com/instantsubnet" rel="noopener noreferrer">X</a>
         </nav>

@@ -7,26 +7,30 @@
     <meta name="robots" content="index, follow">
     <meta id="theme-color" name="theme-color" content="#d9e0e9">
     <title>Run a miner · Instant Docs</title>
-    <link rel="canonical" href="https://instantsubnet.com/docs/miners/">
-    <link rel="icon" type="image/svg+xml" href="/docs/assets/favicon.svg">
-    <link rel="stylesheet" href="/docs/assets/docs.css">
-    <script src="/docs/assets/docs.js" defer></script>
+    <link rel="canonical" href="https://docs.instantsubnet.com/miners/">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+    <link rel="stylesheet" href="/assets/docs.css">
+    <script src="/assets/docs.js" defer></script>
   </head>
   <body>
-    <a class="skip-link" href="/docs/miners/#main-content">Skip to content</a>
+    <a class="skip-link" href="/miners/#main-content">Skip to content</a>
     <header class="docs-header">
       <div class="docs-header-inner">
-        <a class="docs-brand" href="/docs/" aria-label="Instant documentation home">
-          <span class="docs-brand-mark" aria-hidden="true">IN</span>
+        <a class="docs-brand" href="/" aria-label="Instant documentation home">
+          <span class="docs-brand-mark" aria-hidden="true">
+            <img class="docs-brand-mark-light" src="/assets/instant-mark-light.svg" alt="" width="100" height="81">
+            <img class="docs-brand-mark-dark" src="/assets/instant-mark-dark.svg" alt="" width="100" height="81">
+          </span>
           <span>Instant Docs</span>
         </a>
         <nav class="docs-nav" id="docs-nav" aria-label="Primary navigation">
           <ul>
-            <li><a href="/docs/">Overview</a></li>
-            <li><a href="/docs/miners/" aria-current="page">Miners</a></li>
-            <li><a href="/docs/validators/">Validators</a></li>
-            <li><a href="/docs/troubleshooting/">Troubleshooting</a></li>
-            <li><a href="/docs/about/">About</a></li>
+            <li><a href="/">Overview</a></li>
+            <li><a href="/miners/" aria-current="page">Miners</a></li>
+            <li><a href="/validators/">Validators</a></li>
+            <li><a href="/troubleshooting/">Troubleshooting</a></li>
+            <li><a href="/about/">About</a></li>
+            <li><a href="https://instantsubnet.com/">Home</a></li>
           </ul>
         </nav>
         <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch theme">
@@ -44,12 +48,13 @@
         <h2>Miner guide</h2>
         <nav aria-label="Page sections">
           <ul>
-            <li><a href="/docs/miners/#prerequisites">Prerequisites</a></li>
-            <li><a href="/docs/miners/#installer">Availability</a></li>
-            <li><a href="/docs/miners/#identity">Hotkeys and UIDs</a></li>
-            <li><a href="/docs/miners/#capabilities">Capabilities</a></li>
-            <li><a href="/docs/miners/#limits">Limits</a></li>
-            <li><a href="/docs/miners/#safety">Wallet safety</a></li>
+            <li><a href="/miners/#quick-start">Quick start</a></li>
+            <li><a href="/miners/#prerequisites">Prerequisites</a></li>
+            <li><a href="/miners/#identity">Hotkeys and UIDs</a></li>
+            <li><a href="/miners/#operations">Operations</a></li>
+            <li><a href="/miners/#updates">Updates</a></li>
+            <li><a href="/miners/#limits">Limits</a></li>
+            <li><a href="/miners/#safety">Wallet safety</a></li>
           </ul>
         </nav>
       </aside>
@@ -60,25 +65,36 @@
           <h1>Connect GPU capacity without opening an inbound service.</h1>
           <p class="lede">
             An Instant worker connects outbound to the platform, authenticates with
-            a submitted Finney/SN46 UID and chain-registered hotkey, serves the
+            a submitted SN46 UID and chain-registered hotkey, serves the
             approved model locally, and emits TOPLOC evidence for asynchronous verification.
           </p>
         </header>
 
-        <aside class="callout callout--warning" aria-labelledby="miner-status-title">
-          <h2 id="miner-status-title">The public installer is unavailable</h2>
+        <section id="quick-start" aria-labelledby="quick-start-title">
+          <p class="eyebrow">Quick start</p>
+          <h2 id="quick-start-title">Register, install, and provide two public identifiers</h2>
+          <ol class="flow-list">
+            <li>Register an operational Miner hotkey on SN46.</li>
+            <li>Run the official installer on the GPU host.</li>
+            <li>Enter the registered Miner UID.</li>
+            <li>Enter the registered SS58 hotkey.</li>
+            <li>Wait for the installer to report that the model, worker, and Platform connection are ready.</li>
+          </ol>
+          <pre class="command"><code>curl -fsSL https://instantsubnet.com/miner/install | sudo bash</code></pre>
           <p>
-            Instant does not currently provide a public installation command. Do not
-            run installer commands shared through unofficial channels.
+            The installer searches the invoking user's and root's standard Bittensor
+            wallet directories for the matching operational hotkey. If it cannot find
+            exactly one match, it asks for the hotkey file's exact path and verifies
+            that it resolves to the SS58 address entered above.
           </p>
-        </aside>
+        </section>
 
         <section id="prerequisites" aria-labelledby="prerequisites-title">
           <h2 id="prerequisites-title">Prerequisites</h2>
           <ul class="check-list">
             <li>Exactly one visible NVIDIA GPU with at least 31,744 MiB VRAM, compute capability 8.0+, and driver 570+.</li>
-            <li>Enough host RAM and disk for the approved GPT-OSS-20B model and serving engine.</li>
-            <li>A clean Linux host compatible with the signed Miner Kit release.</li>
+            <li>Ubuntu 22.04 or 24.04 on x86-64.</li>
+            <li>At least 80 GiB free on the model filesystem.</li>
             <li>Outbound DNS, HTTPS, and secure WebSocket access on port 443.</li>
             <li>An operational Bittensor hotkey already registered on the intended network and subnet.</li>
             <li>Administrator access for the signed package installation and system service setup.</li>
@@ -87,15 +103,6 @@
             Hardware support is release-specific. Do not assume that a GPU is
             accepted from VRAM capacity alone; driver, model, engine, tokenizer, and
             proof-profile compatibility are checked separately.
-          </p>
-        </section>
-
-        <section id="installer" aria-labelledby="installer-title">
-          <p class="eyebrow">Installation</p>
-          <h2 id="installer-title">Public access unavailable</h2>
-          <p>
-            Miner onboarding is not open to the public. Public installation is not
-            supported.
           </p>
         </section>
 
@@ -117,8 +124,9 @@
             </div>
           </div>
           <ol class="flow-list" aria-label="Miner identity binding">
-            <li>Register the operational hotkey on Finney subnet 46.</li>
+            <li>Register the operational hotkey on SN46.</li>
             <li>Enter its current UID and hotkey during installation.</li>
+            <li>If automatic discovery fails, enter the exact operational hotkey file path.</li>
             <li>Sign the platform's one-use WSS challenge locally.</li>
             <li>The platform verifies the UID/hotkey mapping and runs a TOPLOC canary.</li>
             <li>Ordinary routing starts after the canary passes.</li>
@@ -129,8 +137,31 @@
           </p>
         </section>
 
-        <section id="capabilities" aria-labelledby="capabilities-title">
-          <h2 id="capabilities-title">Current worker capabilities</h2>
+        <section id="operations" aria-labelledby="operations-title">
+          <p class="eyebrow">SSH and localhost</p>
+          <h2 id="operations-title">Use the CLI or the local operations page</h2>
+          <p>All SSH commands use the installed Miner Kit binary:</p>
+          <pre class="command"><code>MINER_CLI=/opt/instant-miner/current/bin/instant-miner-kit
+
+sudo "$MINER_CLI" status
+sudo "$MINER_CLI" status --json
+sudo "$MINER_CLI" stats --period 24h
+sudo "$MINER_CLI" stats --json --period 7d
+sudo "$MINER_CLI" logs --service worker --lines 200
+sudo "$MINER_CLI" logs --service vllm --lines 200
+sudo "$MINER_CLI" service restart worker
+sudo "$MINER_CLI" service restart vllm
+sudo "$MINER_CLI" service restart all
+sudo "$MINER_CLI" diagnostics</code></pre>
+          <p>
+            The CLI reports Platform connection and routing readiness; worker, vLLM,
+            and TOPLOC readiness; release, model, profile, and GPU health; request and
+            token totals; TTFT, generation TPS, proof outcomes, and sanitized errors.
+          </p>
+          <p>The same data and allow-listed actions are available at <code>127.0.0.1:8787</code>. From an SSH-only computer:</p>
+          <pre class="command"><code>ssh -L 8787:127.0.0.1:8787 root@MINER_HOST</code></pre>
+          <p>Keep that tunnel open and visit <code>http://127.0.0.1:8787</code>. The page is not exposed publicly.</p>
+
           <div class="table-wrap">
             <table>
               <caption>Supported worker behavior</caption>
@@ -143,16 +174,34 @@
                 <tr><th scope="row">Responses</th><td>Streaming and non-streaming customer-compatible completions.</td></tr>
                 <tr><th scope="row">Sessions</th><td>One authenticated outbound WSS session, heartbeat, and bounded reconnect.</td></tr>
                 <tr><th scope="row">Evidence</th><td>Terminal receipts and TOPLOC evidence verified asynchronously after customer output streams.</td></tr>
-                <tr><th scope="row">Operations</th><td>Readiness, diagnostics, update, rollback, and uninstall paths in a signed release.</td></tr>
+                <tr><th scope="row">Operations</th><td>The SSH CLI and localhost page use the same sanitized data and allow-listed actions.</td></tr>
               </tbody>
             </table>
           </div>
+        </section>
+
+        <section id="updates" aria-labelledby="updates-title">
+          <p class="eyebrow">Release management</p>
+          <h2 id="updates-title">Updates are manual</h2>
+          <pre class="command"><code>MINER_CLI=/opt/instant-miner/current/bin/instant-miner-kit
+
+sudo "$MINER_CLI" update check
+sudo "$MINER_CLI" update apply
+sudo "$MINER_CLI" rollback</code></pre>
+          <p>
+            <code>update check</code> reads the release metadata referenced by GitHub
+            <code>main</code>. <code>update apply</code> downloads that signed archive,
+            authenticates it with the installed release key, stages and activates it,
+            verifies readiness, and retains the previous signed release for rollback.
+            Miner Kit never auto-updates and never copies loose Python files to a host.
+          </p>
         </section>
 
         <section id="limits" aria-labelledby="limits-title">
           <h2 id="limits-title">Important limits</h2>
           <ul class="check-list check-list--limits">
             <li>A valid registration is not enough: the first inference/TOPLOC canary must pass before customer routing.</li>
+            <li>Instant does not set a default completion limit. Without a customer-supplied limit, generation continues until the model stops or the remaining 131,072-token combined context is exhausted.</li>
             <li>The supported release uses one capability-based NVIDIA/model/backend profile, not a product-name allowlist.</li>
             <li>Meeting the static GPU floor makes a host a candidate; each GPU family must pass an inference and TOPLOC canary before routing.</li>
             <li>Self-reported GPU and capacity data are advisory. Platform-observed health and TOPLOC outcomes control routing.</li>
@@ -166,7 +215,8 @@
           <aside class="callout callout--danger">
             <h3>Never provide a coldkey or recovery secret</h3>
             <p>
-              The miner needs an operational hotkey signer. It never needs the
+              The miner needs an operational hotkey signer. If it cannot discover
+              that signer, it asks for the exact hotkey file path. It never needs the
               owner's private coldkey, mnemonic, seed phrase, or a copy of another
               validator's wallet.
             </p>
@@ -177,7 +227,7 @@
             <li>Keep the inference backend on loopback and the worker connection outbound-only.</li>
             <li>Review diagnostic output before sharing it with support.</li>
           </ul>
-          <p><a class="text-link" href="/docs/troubleshooting/#miner">Troubleshoot a miner safely</a></p>
+          <p><a class="text-link" href="/troubleshooting/#miner">Troubleshoot a miner safely</a></p>
         </section>
       </article>
     </main>
@@ -186,8 +236,8 @@
       <div class="docs-footer-inner">
         <p>© <span data-current-year></span> Instant · Miner operations</p>
         <nav aria-label="Footer navigation">
-          <a href="/docs/validators/">Validator guide</a>
-          <a href="/docs/troubleshooting/">Get help</a>
+          <a href="/validators/">Validator guide</a>
+          <a href="/troubleshooting/">Get help</a>
           <a href="https://github.com/instant-subnet" rel="noopener noreferrer">GitHub</a>
         </nav>
       </div>
