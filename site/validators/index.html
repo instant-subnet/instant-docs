@@ -76,10 +76,22 @@
 cd instant-subnet
 cp .env.example .env</code></pre>
           <p>
-            In <code>.env</code>, confirm the network and netuid, then set the expected
-            Platform signer and the Validator wallet name, hotkey, and wallet path.
-            Start the Validator with:
+            Open <code>.env</code> and set these values before starting:
           </p>
+          <pre class="command"><code>INSTANT_NETWORK=&lt;network&gt;
+INSTANT_NETUID=&lt;netuid&gt;
+INSTANT_PLATFORM_REPORT_URL=https://api.instantsubnet.com/validator/v1/reports/latest
+INSTANT_PLATFORM_SIGNER=&lt;official Platform signer SS58&gt;
+INSTANT_WALLET_NAME=&lt;wallet name&gt;
+INSTANT_WALLET_HOTKEY=&lt;hotkey name&gt;
+INSTANT_WALLET_PATH=~/.bittensor/wallets</code></pre>
+          <p>
+            The network and netuid must match the subnet where the Validator is
+            registered. The Platform signer must match the signer published for that
+            network; do not accept a replacement signer from an untrusted report. The
+            wallet path must contain the named operational hotkey.
+          </p>
+          <p>Start the Validator with:</p>
           <pre class="command"><code>python3 scripts/start_validator.py</code></pre>
           <p>
             The setup prepares the environment, installs the scheduled Validator run,
