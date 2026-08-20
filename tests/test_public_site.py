@@ -217,7 +217,7 @@ class PublicSiteTests(unittest.TestCase):
             "INSTANT_NETWORK=&lt;network&gt;",
             "INSTANT_NETUID=&lt;netuid&gt;",
             "INSTANT_PLATFORM_REPORT_URL=https://api.instantsubnet.com/validator/v1/reports/latest",
-            "INSTANT_PLATFORM_SIGNER=&lt;official Platform signer SS58&gt;",
+            "INSTANT_PLATFORM_SIGNER=5E1oV49jn5s2pZMkn1NSNCE3pU6afjKMcAhDPvy2iZacQVp5",
             "INSTANT_WALLET_NAME=&lt;wallet name&gt;",
             "INSTANT_WALLET_HOTKEY=&lt;hotkey name&gt;",
             "INSTANT_WALLET_PATH=~/.bittensor/wallets",
